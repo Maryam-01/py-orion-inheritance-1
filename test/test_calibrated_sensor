@@ -1,0 +1,9 @@
+from src.calibrated_sensor import CalibratedSensor
+from src.temperature_sensor import TemperatureSensor
+
+
+def test_calibrated_sensor():
+    temp = TemperatureSensor("temp_1")
+    calibrated = CalibratedSensor(temp, offset=-2.0, scale=2.0)
+    assert calibrated.read(25.0) == 46
+
