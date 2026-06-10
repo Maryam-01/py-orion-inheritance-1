@@ -8,9 +8,11 @@ sensor types. - Felix
 """
 
 from datetime import datetime, timezone
+from abc import ABC, abstractmethod
 
 
-class Sensor:
+
+class Sensor(ABC):
     """Base class for all telemetry sensors."""
 
     def __init__(self, sensor_id, unit):
@@ -19,13 +21,15 @@ class Sensor:
         self.status = "nominal"
         self._last_value = None
         self._last_timestamp = None
-
+        
+    @abstractmethod
     def read(self, value):
         """Record a new reading from the sensor."""
         self._last_value = value
         self._last_timestamp = datetime.now(timezone.utc).isoformat()
         return self._last_value
-
+    
+    @abstractmethod
     def validate(self):
         """Check the most recent reading is within acceptable bounds.
 
@@ -35,7 +39,8 @@ class Sensor:
         if self._last_value is None:
             return False
         return True
-
+    
+    @abstractmethod
     def to_packet(self, mission_elapsed_time):
         """Produce a telemetry packet from the most recent reading."""
         return {

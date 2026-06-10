@@ -16,3 +16,18 @@ class BatterySensor(Sensor):
         if not super().validate():
             return False
         return self.MIN_VALID <= self._last_value <= self.MAX_VALID
+
+    def read(self, value):
+        return super().read(value)
+
+    
+    def to_packet(self, mission_elapsed_time):
+        """Produce a telemetry packet from the most recent reading."""
+        return {
+            "sensor_id": self.sensor_id,
+            "timestamp": self._last_timestamp,
+            "value": self._last_value,
+            "unit": self.unit,
+            "mission_elapsed_time": mission_elapsed_time,
+            "status": self.status,
+        }
